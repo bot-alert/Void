@@ -1,2 +1,2 @@
 # Void
-This is an application developed for making a blog's.
+This is an application developed for (To decide)
