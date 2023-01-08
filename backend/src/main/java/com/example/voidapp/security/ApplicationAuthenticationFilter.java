@@ -57,9 +57,4 @@ public class ApplicationAuthenticationFilter extends OncePerRequestFilter {
     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
   }
-
-  @Override
-  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-    return super.shouldNotFilter(request);
-  }
 }

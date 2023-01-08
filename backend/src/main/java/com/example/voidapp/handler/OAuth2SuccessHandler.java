@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
@@ -28,6 +29,8 @@ public class OAuth2SuccessHandler extends SavedRequestAwareAuthenticationSuccess
   private final UserEntityRepository userEntityRepository;
   private final RoleRepository roleRepository;
   private final JWTGenerator jwtGenerator;
+  @Value("${spring.google.redirect-url}")
+  private String redirectUrl;
 
 
   @Override
@@ -37,6 +40,9 @@ public class OAuth2SuccessHandler extends SavedRequestAwareAuthenticationSuccess
     OidcUserInfo userInfo = new OidcUserInfo(oauthUser.getClaims());
     persistNewUserToDatabase(userInfo);
     generateCookie(response, userInfo.getEmail());
+    System.out.println("HERe");
+    response.sendRedirect(redirectUrl);
+    response.setStatus(302);
     super.onAuthenticationSuccess(request, response, authentication);
   }
 
