@@ -13,10 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
 
 @EnableWebSecurity
-@RequiredArgsConstructor
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfiguration {
   private final JwtAuthEntryPoint authEntryPoint;
   private final OAuth2SuccessHandler oAuth2SuccessHandler;
@@ -57,3 +58,5 @@ public class SecurityConfiguration {
   }
 
 }
+
+

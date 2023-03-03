@@ -51,7 +51,6 @@ public class ApplicationAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private void setAuthentication(HttpServletRequest request, String[] emailAndRole) {
-
     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(emailAndRole[0], null,
             List.of(new SimpleGrantedAuthority(emailAndRole[1])));
     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
