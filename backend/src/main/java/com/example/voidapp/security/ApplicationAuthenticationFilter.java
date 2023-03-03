@@ -3,7 +3,6 @@ package com.example.voidapp.security;
 import com.example.voidapp.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,22 +29,13 @@ public class ApplicationAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
     log.info(request.getRequestURI());
     String token = jwtUtil.getJWTFromRequest(request);
-    validateOAuth2Users(request);
-    validateNormalUsers(request, token);
+    validateUsers(request, token);
     filterChain.doFilter(request, response);
   }
 
-  private void validateNormalUsers(HttpServletRequest request, String token) {
+  private void validateUsers(HttpServletRequest request, String token) {
     if (StringUtils.hasText(token) && jwtUtil.isValidToken(token) && jwtUtil.isNonBlackListToken(token)) {
       String[] emailAndRole = jwtUtil.getEmailAndRoleFromJWT(token);
-      setAuthentication(request, emailAndRole);
-    }
-  }
-
-  private void validateOAuth2Users(HttpServletRequest request) {
-    Cookie oauth2Cookies = jwtUtil.getOAuthCookies(request.getCookies());
-    if (null != oauth2Cookies) {
-      String[] emailAndRole = jwtUtil.getEmailAndRoleFromJWT(oauth2Cookies.getValue());
       setAuthentication(request, emailAndRole);
     }
   }

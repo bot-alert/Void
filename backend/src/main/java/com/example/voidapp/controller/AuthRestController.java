@@ -49,7 +49,7 @@ public class AuthRestController {
 
   @GetMapping("/logout")
   public ResponseEntity<String> login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-    logoutHandler.logout(httpServletRequest, httpServletResponse);
+    logoutHandler.logout(httpServletRequest);
     return ResponseEntity.ok("LOGGED OUT");
   }
 }
