@@ -60,16 +60,6 @@ public class JwtUtil {
     return null;
   }
 
-  public Cookie getOAuthCookies(Cookie[] cookies) {
-    if (cookies == null) return null;
-    for (Cookie cookie : cookies) {
-      if (SecurityConstant.OAUTH2_TOKEN.equals(cookie.getName()) && isValidToken(cookie.getValue()) && isNonBlackListToken(cookie.getValue())) {
-        return cookie;
-      }
-    }
-    return null;
-  }
-
   @Async
   void removeExpiredBlackListToken() {
     blackListToken.entrySet().removeIf(entry -> isTokenExpired(decoder.decode(entry.getKey()).getExpiresAt()));

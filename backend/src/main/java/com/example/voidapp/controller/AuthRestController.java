@@ -7,9 +7,9 @@ import com.example.voidapp.handler.CostumeLogoutHandler;
 import com.example.voidapp.security.JWTGenerator;
 import com.example.voidapp.service.UserEntityService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,22 +34,30 @@ public class AuthRestController {
 
   @PostMapping("/register")
   public ResponseEntity<String> save(@RequestBody @Valid RegisterDto registerDto) {
-    userEntityService.save(registerDto);
-    return ResponseEntity.ok("User registered !");
+    try {
+      userEntityService.save(registerDto);
+      return ResponseEntity.ok("User Registered");
+    } catch (Exception exception) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+    }
   }
 
   @PostMapping("/login")
-  public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid LoginDto loginDto) {
-    Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    String token = jwtGenerator.generateToken(authentication);
-    return ResponseEntity.ok(new AuthResponseDto(token));
+  public ResponseEntity<Object> login(@RequestBody @Valid LoginDto loginDto) {
+    try {
+      Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      String token = jwtGenerator.generateToken(authentication);
+      userEntityService.login(loginDto.getUsername());
+      return ResponseEntity.ok(new AuthResponseDto(token));
+    } catch (Exception exception) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect email/password");
+    }
   }
 
   @GetMapping("/logout")
-  public ResponseEntity<String> login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+  public ResponseEntity<String> login(HttpServletRequest httpServletRequest) {
     logoutHandler.logout(httpServletRequest);
-    return ResponseEntity.ok("LOGGED OUT");
+    return ResponseEntity.ok("Logged out");
   }
 }

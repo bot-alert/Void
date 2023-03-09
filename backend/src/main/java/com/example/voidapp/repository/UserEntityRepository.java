@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 @Repository
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
   Optional<UserEntity> findByEmail(String username);
+  Optional<UserEntity> findByUuid(String uuid);
 
   boolean existsByEmailAndEmailIsNotNull(String email);
 }

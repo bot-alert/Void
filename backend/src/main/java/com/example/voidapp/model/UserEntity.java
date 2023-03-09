@@ -2,6 +2,7 @@ package com.example.voidapp.model;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,9 +23,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -39,6 +42,12 @@ public class UserEntity implements UserDetails {
   private String username;
   private String password;
   private String email;
+  private boolean active;
+  private long lastSeen;
+  private String uuid;
+  private String image;
+  @ElementCollection
+  private List<String> friends;
   @OneToOne(fetch = FetchType.EAGER)
   private Role role;
   @CreatedDate
